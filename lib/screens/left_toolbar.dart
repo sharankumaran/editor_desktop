@@ -141,14 +141,48 @@ class LeftToolbar extends StatelessWidget {
 
             // Video section
             sectionTitle('Video'),
+            // YouTube Video section
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
-                onPressed: () => _pickVideo(context),
-                icon: const Icon(Icons.play_circle_outline),
+                onPressed: () async {
+                  final controller = TextEditingController();
+                  await showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: const Text('Add YouTube Video'),
+                      content: TextField(
+                        controller: controller,
+                        decoration: const InputDecoration(
+                          hintText: 'Paste YouTube link here',
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            final link = controller.text.trim();
+                            if (link.isNotEmpty) {
+                              Provider.of<EditorProvider>(
+                                context,
+                                listen: false,
+                              ).addVideoWidget(link);
+                            }
+                            Navigator.pop(ctx);
+                          },
+                          child: const Text('Add'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.ondemand_video_outlined),
                 label: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 16),
-                  child: Text('Add Video'),
+                  child: Text('Add YouTube Link'),
                 ),
               ),
             ),
